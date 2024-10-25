@@ -7,13 +7,13 @@
 
   const defaultTodo = {
     id: uuidv4(),
-    text: 'Please Enter Your todo here...'
+    text: 'You can add your to-do here...'
   }
 
   todoList.value.push(defaultTodo)
 
   const addTodo = () => {
-    if(inputText.value.length>5){
+    if(inputText.value.length>3){
       const todo = {
         id: uuidv4(),
         text: inputText.value
@@ -28,7 +28,9 @@
   const deleteTodo = (id) =>{
     todoList.value = todoList.value.filter(each=>each.id!==id)
     if(todoList.value.length===0){
-      todoList.value.push(defaultTodo)
+      setTimeout(()=>{
+        todoList.value.push(defaultTodo)
+      },3000)
     }
   }
 
@@ -39,8 +41,21 @@
     <div class="todo-container">
       <h1>This is a To-Do List</h1>
       <div class="inputContainer">
-        <input type="text" class="inputBar" v-model="inputText" @keyup.enter="addTodo"/>
-        <button class="addButton" @click="addTodo">Add To-Do</button>
+        <input 
+          type="text" 
+          class="inputBar" 
+          v-model="inputText" 
+          placeholder="Please Enter your input..."
+          @focus="inputText ? null : $event.target.placeholder = ''" 
+          @blur="inputText ? null : $event.target.placeholder = 'Please Enter your input...'"
+          @keyup.enter="addTodo"
+        />
+        <button 
+          class="addButton" 
+          @click="addTodo"
+        >
+          Add To-Do
+        </button>
       </div>
       <ul v-if="todoList.length>0"class="todo-list-container">
         <li v-for="todo in todoList" :key="todo.id" class="todo-list-item">
@@ -130,6 +145,11 @@
     font-weight: bold;
     padding: 0 0 0 2rem;
     color: rgb(45, 175, 207);
+  }
+
+  .inputBar::placeholder {
+    color: rgb(45, 175, 207); /* Change to your desired color */
+    opacity: 1; /* Set opacity to ensure the color is visible */
   }
 
   .deleteButton{
